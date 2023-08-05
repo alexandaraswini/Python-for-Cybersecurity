@@ -1,0 +1,40 @@
+Autorun is a file that automatically run, when usb is plugged into computer.
+
+Now in current version of window, autorun is unavailable. Because oviously running program by default when you plugin usb can create a security risk.
+
+However, some computers have auto enabled, making it a viable initial access vector.
+
+In the cases, where thats no the case, then a lot of this technique is going to be useful in a social engineering attack. So you can create an possible link for executable, so someone might think it as legitimate and then run it. Then it automatically run the executable.
+
+Code Discussion:
+
+import PyInstaller._main_
+As we see at the top of the file, we are using PYInstaller to create a windows executable from a python script. This is helpful because the python script might not be runnable at the target system. May be they dont have python installed. If you have a self contained executable, it cant run window by making use of this.
+So it is useful for autorun and more useful in general for phising attack.
+
+import shutil
+import os
+Here we are using shutil for couple of command and using os for Operating system command.
+
+filename = "malicious.py"
+exename = "benign.exe"
+icon = "Firefox.ico"
+
+Here we got the definition of variable that we are going to be using throught the rest of the script. 
+filename here is the name of the malicious executable. In our case, its not particularly malicious for demonstation. Its an example of the python file and so you can 
+easily write to be malicious and dangerous in other ways. 
+
+We also have executable name "benign.exe". In this case, we can change to something else as part of social engineering attack.
+We also have icon here. One thing that py installer allow us to do was , is to set the display icon for that executable.This is helpful bcoz many icon you can trust and run it (Use very recognizable images). In this case we are using famous "Firefox.ico" icon as display icon for malicious executable.
+
+pwd = "X:"
+usbdir = os.path.join(pwd,"USB")
+Then getting current working directory or any directory if needed. And then we defining directory for hypothetical usb drive. In our case we are going to use a folder inside our current/mentioned working directory called "USB". But you can see how you can easily change this directory to mounted USB drive on our computer as we built this. so that we create a malicious USB.
+
+
+if os.path.isfile(exename):
+    os.remove(exename)
+Then this is little cleanup code here, saying that if the executable already exist, we should remove it because the operation which we going to perform wont work , when we try to move it on to the USB (if that usb already exist).
+
+
+print("Creating EXE")
