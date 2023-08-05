@@ -3,3 +3,51 @@ Using SSH and Telnet to test default credentials on a system.
 This code will do sshlogin and telnet login
 
 Here we are checking sshlogin and telnet. This combination is useful because computuer runs ssh serv
+
+
+There we are using library called paramiko to implement ssh for us.
+
+ ssh = paramiko.SSHClient() # start SSH client
+So accessing the sshclient and then perform a request using password rather than host keys
+
+ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy()) # if public key not trusted, create a trusted key
+If we dont have server key enabled, which we dont because we are scanning, we are going to say that we ignore 
+the fact that server host key isnt in our list of trusted key. Which is perfect sense because we wont require user interaction and accept the key 
+and we certainly dont want the connection to fail because of dont having server key
+
+ssh.connect(host,port=port,username=username,password=password) # test credentials on SSH
+It takes host (may be localhost for this time) , and port (may be 22) and username and password from default.txt file
+
+ssh_session = ssh.get_transport().open_session() # create session
+Then we attempt to open a session and try to connect to this.
+
+if section:
+Here we testing whether we have or not active session.
+IF you have active session after providing username and password, that means your login was sucessful and so that means the username and password are valid set of credentials
+for that particular machine.
+
+If we dont have an active session
+
+
+The other option is telnet. I menetioned that the IOT devices often have default credentials and often have telnet running. So having
+a telnet based credentials is also good.
+
+def TelnetLogin(host,port,username,password):
+   user = bytes(username + "\n", "utf-8")
+    passwd= bytes(password + "\n", "utf-8")
+
+Here we are using username and password as bytes and then we use them later at some point
+
+ tn = telnetlib.Telnet(host,port,timeout=1) # launch Telnet session
+In this case, we are using telnetlib library and the above will set up a session on host and that port 23.
+
+    tn.read_until(b"Login: ") # wait for login prompt
+Then we are using read_until command of telnetlib. What it do? It takes a particular things to look for , it 
+keep reading the data after the wire until its sees the particular thing. In our case
+it looing for login part. So this is nt the login prompt used by the particular system and then they customized 
+in some way, this is going to . It will only work if we have the correct login part. If it did , it write the username on nextline.
+    tn.write((username + "\n").encode("utf-8")) # write username and encode with utf-8
+    tn.read_until(b"Password: ") # then wait for password prompt
+    tn.write((password + "\n").encode("utf-8")) # write passsword in password prompt. Then encode in utf-8
+
+
