@@ -1,0 +1,5 @@
+Using SSH and Telnet to test default credentials on a system.
+
+This code will do sshlogin and telnet login
+
+Here we are checking sshlogin and telnet. This combination is useful because computuer runs ssh serv
