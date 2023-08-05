@@ -34,8 +34,9 @@ Then getting current working directory or any directory if needed. And then we d
 
 if os.path.isfile(exename):
     os.remove(exename)
-Then this is little cleanup code here, saying that if the executable already exist, we should remove it because the operation which we going to perform wont work , when we try to move it on to the USB (if that usb already exist).
 print("Creating EXE")
+Then this is little cleanup code here, saying that if the executable already exist, we should remove it because the operation which we going to perform wont work , when we try to move it on to the USB (if that usb already exist).
+
 
 
 
@@ -48,6 +49,45 @@ PyInstaller.__main__.run([
     "--name="+exename,
     "--icon="+icon
 ])
+print("EXE created")
+So here, we are calling PyInstaller main function and then calling run inside of that. And reason why that we have this slightly different syntax here for function calls is typically the PyInstaller is designed to be run as a standalone program on the command line terminal etc. However since its python related, its designed to allow you to run within python as well in this way. And so calling this is similar to say Pyinstaller and then passing a following a list of argument such as malicious.py ,
+put evertything into a single file,
+cleanup everything before doing so,
+we set a log level to Error here, so that it doesnt print a bunch of information (when pyinstaller is failing), 
+we then specify the output name of the executable that we creating (in our case it is benign.exe), 
+and we specify it wants the icon to be set to. (In our case, its a firefox icon)
 
-So here, we are calling PyInstaller main function and then calling run inside of that. And reason why that we have this slightly different syntax here for function calls is typically the PyInstaller is designed to be run as a standalone program on the command line terminal itself
+Again the above is more useful for socail engineering usecase, where we drop of USB that has a promising looking executable on it, rather than a autorun usecase that have potentially this executable would be hidden on the USB drive.
+
+And so, when we call this command, its going to call a pyInstaller in a wrapper of python file in a self contained executable.
+
+# clean up after PyInstaller
+shutil.move(os.path.join(pwd,"dist",exename),pwd)
+shutil.rmtree("dist")
+shutil.rmtree("build")
+shutil.rmtree("__pycache__")
+os.remove(exename+".spec")
+
+Then we need to move into a cleanup stuff. PyInstaller by default created few directories and for example, its create a "dist" directory wher the final executable going to be placed. And so we going to be move that for current working directory. And then clean up the dist and build directory and pycache directory.
+So that we have a cleaned folder once we done that. And alsoe we are remove a temporary file or configuration file called "benign.exe.spec" which talks about the specification. 
+So at this point, what we have is a python script that wrapped in to a self contained or executable. Its doesnt need python to be installed on target machine to run. Everything that it need is bundled inside the executable.
+
+
+# create AutoRun File
+with open("Autorun.inf","w") as o:
+    o.write("(Autorun)\n")
+    o.write("Open="+exename+"\n")
+    o.write("Action=Start Firefox Portable\n")
+    o.write("Label=My USB\n")
+    o.write("Icon="+exename+"\n")
+NExt few line of code mentioned above are designed to implement the autorun part of our attack. SO again its not much useful and matter when OS explicitly setup autorun. But still useful for looking in a legacy system that autorun is not been disabled.
+And so we are going to now use python file io to create a file called "Autorun.inf" which is the file that has to place on this USB drive and to cause it to run automatically. 
+o.write("(Autorun)\n")
+And the these are lines of code that we Autorun in parenthesis on the ownline and instruction of what to do. So its suppose to open "benign.exe". Then its going to start firefox portable (may be take this action on the prompt), then label this as "My USB" and then we specify the icon.
+
+
+
+
+
+
 
