@@ -2,7 +2,7 @@ Using SSH and Telnet to test default credentials on a system.
 
 This code will do sshlogin and telnet login
 
-Here we are checking sshlogin and telnet. This combination is useful because computuer runs ssh serv
+Here we are checking sshlogin and telnet. This combination is useful because computuer runs ssh service and IOT device runs with telnet
 
 
 There we are using library called paramiko to implement ssh for us.
