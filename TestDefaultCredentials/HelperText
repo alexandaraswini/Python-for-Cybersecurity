@@ -44,7 +44,7 @@ In this case, we are using telnetlib library and the above will set up a session
     tn.read_until(b"Login: ") # wait for login prompt
 Then we are using read_until command of telnetlib. What it do? It takes a particular things to look for , it 
 keep reading the data after the wire until its sees the particular thing. In our case
-it looing for login part. So this is nt the login prompt used by the particular system and then they customized 
+it looking for login part. So this is nt the login prompt used by the particular system and then they customized 
 in some way, this is going to . It will only work if we have the correct login part. If it did , it write the username on nextline.
     tn.write((username + "\n").encode("utf-8")) # write username and encode with utf-8
 
@@ -57,8 +57,7 @@ Here againg read until, we look for password login prompt. Once we receive that,
 
 Then we have try expect login here as well
 try:
-        result = tn.expect([b"Last login"]) # get last login time
-        # if last login time is over 0
+        result = tn.expect([b"Last login"]) # get last login time        # if last login time is over 0
         if (result[0] > 0):
             # print out a login successful message
             print("Telnet login successful on %s:%s with username %s\
