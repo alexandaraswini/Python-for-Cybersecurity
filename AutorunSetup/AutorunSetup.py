@@ -9,7 +9,7 @@ pwd = "X:"
 usbdir = os.path.join(pwd,"USB")
 if os.path.isfile(exename):
     os.remove(exename)
-    
+#print("Creating EXE")     ##Include it for learning purpose
 # create executable from Python script
 PyInstaller.__main__.run([
     "malicious.py"
