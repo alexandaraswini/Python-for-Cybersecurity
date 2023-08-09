@@ -32,9 +32,14 @@ This makes concatenation of directory with benign.exe
 
 if os.path.isfile(filepath):
     os.remove(filepath)
+
+The above two line is for cleanup if there file earlier exist (if exist, it will break our code).
+
     
 # use BuildExe to create malicious executable
 os.system("python BuildExe.py")
+
+Here we are calling BuildExe.py which are designed to convert a python file into a malicious executable
 
 # move maliciopus executable to desired directory
 shutil.move(filename,filedir)
