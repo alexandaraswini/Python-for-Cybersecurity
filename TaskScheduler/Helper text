@@ -84,3 +84,9 @@ os.system('schtasks /create /tn SecurityScan /tr \"%s\" /sc once /st %s /sd %s' 
 input()
 
 Once the scheduling info is availble, we can use schtasks .   /create denotes , we want a new task
+
+
+
+Directly scheduling syntax:
+schtasks /create /tn "SecurityScan"  /sc once /st 15:02 /sd 08/09/2023 /tr C:\Users\PP-IN-615\Downloads\TaskScheduler.py
+O/p:  SUCCESS: The scheduled task "SecurityScan" has successfully been created.
