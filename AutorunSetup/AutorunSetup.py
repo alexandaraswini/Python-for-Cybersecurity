@@ -22,10 +22,10 @@ PyInstaller.__main__.run([
 print("Exe created")
 # clean up after PyInstaller
 shutil.move(os.path.join(pwd,"dist",exename),pwd)
-shutil.rmtree("dist")
+shutil.rmtree("dist") #Use this to remove directory with all its content (Recursive)
 shutil.rmtree("build")
 shutil.rmtree("__pycache__")
-os.remove(exename+".spec")
+os.remove(exename+".spec")  #Use this for, just removing any types of file
 
 print("creating autorun file")
 
